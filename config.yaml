@@ -1,0 +1,10 @@
+provider: ollama
+
+model: llama3.2:3b
+
+temperature: 0.2
+
+input_dir: data
+output_dir: results
+
+max_retries: 3

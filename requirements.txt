@@ -1,0 +1,5 @@
+pydantic
+ollama
+tenacity
+pyyaml
+python-dotenv
