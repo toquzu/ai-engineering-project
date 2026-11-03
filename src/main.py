@@ -16,7 +16,8 @@ input_file = BASE_DIR / config["input_dir"] / "texts.jsonl"
 output_dir = BASE_DIR / config["output_dir"]
 output_dir.mkdir(parents=True, exist_ok=True)
 
-output_file = output_dir / "baseline_v1.jsonl"
+prompt_name = "extract_v2.md"
+output_file = output_dir / "baseline_v2.jsonl"
 
 success_count = 0
 error_count = 0
@@ -32,6 +33,7 @@ with open(output_file, "w", encoding="utf-8") as output:
             incident = extract_incident(
                 text=item["text"],
                 model=config["model"],
+                prompt_name=prompt_name,
                 temperature=config.get("temperature", 0.2),
                 timeout=config.get("timeout", 60),
             )

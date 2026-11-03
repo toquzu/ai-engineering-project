@@ -16,8 +16,8 @@ from schemas import Incident
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-def load_prompt() -> str:
-    path = BASE_DIR / "prompts" / "extract_v1.md"
+def load_prompt(prompt_name: str) -> str:
+    path = BASE_DIR / "prompts" / prompt_name
     return path.read_text(encoding="utf-8")
 
 
@@ -30,6 +30,7 @@ def load_prompt() -> str:
 def extract_incident(
     text: str,
     model: str,
+    prompt_name: str = "extract_v1.md",
     temperature: float = 0.2,
     timeout: float = 60.0,
 ) -> Incident:
@@ -38,7 +39,7 @@ def extract_incident(
     response = client.chat(
         model=model,
         messages=[
-            {"role": "system", "content": load_prompt()},
+            {"role": "system", "content": load_prompt(prompt_name)},
             {"role": "user", "content": text},
         ],
         format=Incident.model_json_schema(),
