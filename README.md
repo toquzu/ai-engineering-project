@@ -19,4 +19,4 @@ ollama run llama3.2:3b
 Then, run the following command in the main project directory:
 
 Bash
-python src\main.py
+python src\main.py / make run
