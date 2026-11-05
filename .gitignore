@@ -18,5 +18,7 @@ Thumbs.db
 # Generated results
 results/*
 
-# Local data files
+# Dataset 
 data/*
+!data/texts.jsonl
+!data/golden.jsonl

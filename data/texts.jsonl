@@ -1,0 +1,30 @@
+{"id":"001","text":"Possible phishing email reported by branch staff. Subject says urgent account verification and links to a fake login page."}
+{"id":"002","text":"Klient dostał SMS o zablokowaniu konta i link prosi o podanie hasła. Podejrzenie phishingu."}
+{"id":"003","text":"Multiple failed logins detected for one employee account within 2 minutes."}
+{"id":"004","text":"ATM at branch 14 shows tamper warning; device taken out of service."}
+{"id":"005","text":"Пользователь сообщил, что приложение банка просит повторно ввести PIN-код после перехода по ссылке из письма."}
+{"id":"006","text":"Firewall log: repeated inbound connections to an exposed admin port from an unfamiliar external IP."}
+{"id":"007","text":"Nie działa MFA dla kilku pracowników, logowanie do systemu bankowego jest utrudnione."}
+{"id":"008","text":"Customer says card payment was declined, but no suspicious activity is visible in the monitoring dashboard."}
+{"id":"009","text":"Potential data leak: report exported to an unapproved personal cloud drive."}
+{"id":"010","text":"SOC alert: endpoint protection quarantined a file named invoice_update.exe."}
+{"id":"011","text":"Several customers report calls from someone pretending to be bank support and asking for one-time codes."}
+{"id":"012","text":"Wykryto nietypowy transfer danych z serwera plików poza standardowymi godzinami pracy."}
+{"id":"013","text":"VPN connection from a new country; employee confirms they are travelling and initiated the login."}
+{"id":"014","text":"Database backup failed last night. No evidence of unauthorized access; retry scheduled."}
+{"id":"015","text":"Suspicious email attachment opened on a workstation; user disconnected it from the network and contacted IT."}
+{"id":"016","text":"Забыли продлить сертификат TLS, портал интернет-банка показывает предупреждение браузера."}
+{"id":"017","text":"Possible ransomware note appeared on one test laptop; production systems not yet confirmed affected."}
+{"id":"018","text":"Dziwne logowania do konta administratora o 03:14, source unknown, pls investigate asap!!!"}
+{"id":"019","text":"Customer reports a card transaction they do not recognize. Could be fraud; card has been temporarily blocked."}
+{"id":"020","text":"Patch for a critical vulnerability is available, but deployment is waiting for the approved maintenance window."}
+{"id":"021","text":"The bank's public website is slow. Monitoring shows high traffic, but no confirmed DDoS attack."}
+{"id":"022","text":"Pracownik przypadkowo wysłał plik z danymi testowymi na zewnętrzny adres. Plik nie zawiera prawdziwych danych klientów."}
+{"id":"023","text":"EDR says malware blocked; host ID WS-204. Need check whether any persistence remains."}
+{"id":"024","text":"A customer cannot reset their password because the recovery email never arrives."}
+{"id":"025","text":"В журнале обнаружены успешные входы после серии неудачных попыток. Нужно проверить возможный взлом учётной записи."}
+{"id":"026","text":"Pen test found an IDOR issue in the internal training portal; no production customer data involved."}
+{"id":"027","text":"Nieznane urządzenie podłączone do portu sieciowego w oddziale. Technik sprawdza, czy to zatwierdzony sprzęt."}
+{"id":"028","text":"A staff member reports that their laptop camera light turned on unexpectedly after opening a suspicious document; no malware alert yet."}
+{"id":"029","text":"Backup restoration test completed successfully. This is a routine change, no incident detected."}
+{"id":"030","text":"URGENT!!! core banking API returns 500 errors after deployment; transactions are delayed, cause not yet known."}

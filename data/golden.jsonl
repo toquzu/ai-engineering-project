@@ -1,0 +1,10 @@
+{"id":"001","category":"phishing","severity":"high","status":"reported","asset":"employee email/account","action":"report email, block URL, investigate recipients"}
+{"id":"002","category":"phishing","severity":"high","status":"suspected","asset":"customer account/SMS","action":"warn customer, block URL, review related reports"}
+{"id":"003","category":"account_compromise","severity":"medium","status":"suspected","asset":"employee account","action":"review authentication logs and verify with account owner"}
+{"id":"004","category":"physical_security","severity":"high","status":"confirmed_alert","asset":"ATM","action":"keep device out of service and notify physical security team"}
+{"id":"005","category":"phishing","severity":"high","status":"reported","asset":"mobile banking account","action":"advise user not to enter credentials and investigate link"}
+{"id":"006","category":"network_security","severity":"medium","status":"suspected","asset":"firewall/admin port","action":"review firewall logs and verify exposure; restrict access if unauthorized"}
+{"id":"007","category":"availability","severity":"medium","status":"reported","asset":"employee MFA/login system","action":"check MFA provider and follow incident process"}
+{"id":"008","category":"customer_support","severity":"low","status":"reported","asset":"card payment service","action":"check payment logs and advise customer through official support"}
+{"id":"009","category": "data_leak","severity":"high","status":"suspected","asset":"report/exported data","action":"restrict access to the cloud copy and assess data sensitivity"}
+{"id":"010","category":"malware","severity":"medium","status":"blocked_by_control","asset":"employee endpoint","action":"review EDR alert and scan endpoint for additional indicators"}
