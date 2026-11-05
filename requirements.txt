@@ -3,3 +3,4 @@ ollama
 tenacity
 pyyaml
 python-dotenv
+anthropic

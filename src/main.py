@@ -1,61 +1,151 @@
 
 import json
+import yaml
 from pathlib import Path
 
-import yaml
-
-from provider import extract_incident
+from clients.ollama_client import OllamaClient
+from clients.anthropic_client import AnthropicClient
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load configuration
 with open(BASE_DIR / "config.yaml", "r", encoding="utf-8") as file:
     config = yaml.safe_load(file)
 
-input_file = BASE_DIR / config["input_dir"] / "texts.jsonl"
+provider = config["provider"]
+model = config["models"][provider]
+
+# Select client
+if provider == "ollama":
+    client = OllamaClient()
+elif provider == "anthropic":
+    client = AnthropicClient()
+else:
+    raise ValueError(f"Unknown provider: {provider}")
+
+# Load prompt
+prompt_version = "v6"
+prompt_path = BASE_DIR / "prompts" / "extract_v6.md"
+prompt = prompt_path.read_text(encoding="utf-8")
+
+# Load input data
+input_path = BASE_DIR / config["input_dir"] / "texts.jsonl"
+
 output_dir = BASE_DIR / config["output_dir"]
-output_dir.mkdir(parents=True, exist_ok=True)
+output_dir.mkdir(exist_ok=True)
 
-prompt_name = "extract_v2.md"
-output_file = output_dir / "baseline_v2.jsonl"
+# Run experiments
+for experiment in config["experiments"]:
 
-success_count = 0
-error_count = 0
+    experiment_name = experiment["name"]
 
-with open(input_file, "r", encoding="utf-8") as file:
-    texts = [json.loads(line) for line in file if line.strip()]
+    params = {
+        "model": model,
+        "temperature": experiment["temperature"],
+        "top_p": experiment["top_p"],
+        "timeout": config["timeout"],
+        "max_tokens": config["max_tokens"],
+    }
 
-with open(output_file, "w", encoding="utf-8") as output:
-    for item in texts:
-        record = {"id": item["id"], "text": item["text"]}
+    output_path = output_dir / (
+        f"benchmark_{provider}_{prompt_version}_{experiment_name}.jsonl"
+    )
 
-        try:
-            incident = extract_incident(
-                text=item["text"],
-                model=config["model"],
-                prompt_name=prompt_name,
-                temperature=config.get("temperature", 0.2),
-                timeout=config.get("timeout", 60),
-            )
+    processed = 0
+    successful = 0
+    failed = 0
+    errors = 0
 
-            record["result"] = incident.model_dump(mode="json")
-            record["error"] = None
-            success_count += 1
+    print(f"\nStarting {experiment_name}")
+    print(f"Prompt: {prompt_version}")
+    print(f"Temperature: {params['temperature']}")
+    print(f"Top P: {params['top_p']}")
 
-            print(f'[{item["id"]}] OK: {incident.category.value}')
+    with open(input_path, "r", encoding="utf-8") as source, \
+         open(output_path, "w", encoding="utf-8") as output:
 
-        except Exception as exc:
-            record["result"] = None
-            record["error"] = str(exc)
-            error_count += 1
+        for line in source:
+            if not line.strip():
+                continue
 
-            print(f'[{item["id"]}] ERROR: {exc}')
+            item = json.loads(line)
+            processed += 1
 
-        output.write(json.dumps(record, ensure_ascii=False) + "\n")
-        output.flush()
+            try:
+                result = client.extract(
+                    text=item["text"],
+                    prompt=prompt,
+                    params=params,
+                )
 
-print("\nProcessing finished.")
-print(f"Total texts: {len(texts)}")
-print(f"Successful: {success_count}")
-print(f"Errors: {error_count}")
-print(f"Results saved to: {output_file}")
+                record = {
+                    "id": item["id"],
+                    "provider": result.provider,
+                    "model": result.model,
+                    "prompt_version": prompt_version,
+                    "experiment": experiment_name,
+                    "temperature": params["temperature"],
+                    "top_p": params["top_p"],
+                    "status": result.status,
+                    "validation_attempts": result.validation_attempts,
+                    "error": result.error,
+                    "incident": (
+                        result.incident.model_dump()
+                        if result.incident is not None
+                        else None
+                    ),
+                    "input_tokens": result.input_tokens,
+                    "output_tokens": result.output_tokens,
+                    "latency_seconds": result.latency_seconds,
+                }
+
+                output.write(
+                    json.dumps(record, ensure_ascii=False) + "\n"
+                )
+
+                if result.status == "success":
+                    successful += 1
+                else:
+                    failed += 1
+
+                print(
+                    f"Processed: {item['id']} | "
+                    f"Status: {result.status} | "
+                    f"Attempts: {result.validation_attempts}"
+                )
+
+            except Exception as error:
+                errors += 1
+
+                record = {
+                    "id": item["id"],
+                    "provider": provider,
+                    "model": model,
+                    "prompt_version": prompt_version,
+                    "experiment": experiment_name,
+                    "temperature": params["temperature"],
+                    "top_p": params["top_p"],
+                    "status": "failed",
+                    "validation_attempts": 0,
+                    "error": str(error),
+                    "incident": None,
+                    "input_tokens": None,
+                    "output_tokens": None,
+                    "latency_seconds": None,
+                }
+
+                output.write(
+                    json.dumps(record, ensure_ascii=False) + "\n"
+                )
+
+                print(f"Error on {item['id']}: {error}")
+
+    print(f"\n{experiment_name} finished")
+    print(f"Processed: {processed}")
+    print(f"Successful: {successful}")
+    print(f"Failed: {failed}")
+    print(f"Errors: {errors}")
+    print(f"Saved to: {output_path}")
+
+print("\nAll experiments finished!")
